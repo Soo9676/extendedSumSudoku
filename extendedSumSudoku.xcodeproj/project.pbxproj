@@ -14,6 +14,11 @@
 		6FE63D8B28C5B8380083053A /* extendedSumSudoku.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63D8928C5B8380083053A /* extendedSumSudoku.xcdatamodeld */; };
 		6FE63D8D28C5B8390083053A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63D8C28C5B8390083053A /* Assets.xcassets */; };
 		6FE63D9028C5B8390083053A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63D8E28C5B8390083053A /* LaunchScreen.storyboard */; };
+		6FE63D9828C5BEA00083053A /* MyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63D9728C5BEA00083053A /* MyViewModel.swift */; };
+		6FE63D9A28C5D3F80083053A /* ViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63D9928C5D3F80083053A /* ViewController+Extensions.swift */; };
+		6FE63D9C28C72E970083053A /* SudokuCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63D9B28C72E970083053A /* SudokuCollectionViewCell.swift */; };
+		6FE63D9E28C735310083053A /* RowSumsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63D9D28C735310083053A /* RowSumsTableViewCell.swift */; };
+		6FE63DA028C735AA0083053A /* ColSumsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63D9F28C735AA0083053A /* ColSumsCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +31,11 @@
 		6FE63D8C28C5B8390083053A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FE63D8F28C5B8390083053A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6FE63D9128C5B8390083053A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FE63D9728C5BEA00083053A /* MyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyViewModel.swift; sourceTree = "<group>"; };
+		6FE63D9928C5D3F80083053A /* ViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extensions.swift"; sourceTree = "<group>"; };
+		6FE63D9B28C72E970083053A /* SudokuCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuCollectionViewCell.swift; sourceTree = "<group>"; };
+		6FE63D9D28C735310083053A /* RowSumsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowSumsTableViewCell.swift; sourceTree = "<group>"; };
+		6FE63D9F28C735AA0083053A /* ColSumsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColSumsCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +70,13 @@
 			children = (
 				6FE63D8028C5B8380083053A /* AppDelegate.swift */,
 				6FE63D8228C5B8380083053A /* SceneDelegate.swift */,
-				6FE63D8428C5B8380083053A /* ViewController.swift */,
 				6FE63D8628C5B8380083053A /* Main.storyboard */,
+				6FE63D8428C5B8380083053A /* ViewController.swift */,
+				6FE63D9928C5D3F80083053A /* ViewController+Extensions.swift */,
+				6FE63D9B28C72E970083053A /* SudokuCollectionViewCell.swift */,
+				6FE63D9D28C735310083053A /* RowSumsTableViewCell.swift */,
+				6FE63D9F28C735AA0083053A /* ColSumsCollectionViewCell.swift */,
+				6FE63D9728C5BEA00083053A /* MyViewModel.swift */,
 				6FE63D8C28C5B8390083053A /* Assets.xcassets */,
 				6FE63D8E28C5B8390083053A /* LaunchScreen.storyboard */,
 				6FE63D9128C5B8390083053A /* Info.plist */,
@@ -142,9 +157,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FE63D8528C5B8380083053A /* ViewController.swift in Sources */,
+				6FE63D9E28C735310083053A /* RowSumsTableViewCell.swift in Sources */,
 				6FE63D8128C5B8380083053A /* AppDelegate.swift in Sources */,
 				6FE63D8328C5B8380083053A /* SceneDelegate.swift in Sources */,
 				6FE63D8B28C5B8380083053A /* extendedSumSudoku.xcdatamodeld in Sources */,
+				6FE63D9C28C72E970083053A /* SudokuCollectionViewCell.swift in Sources */,
+				6FE63D9A28C5D3F80083053A /* ViewController+Extensions.swift in Sources */,
+				6FE63D9828C5BEA00083053A /* MyViewModel.swift in Sources */,
+				6FE63DA028C735AA0083053A /* ColSumsCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
