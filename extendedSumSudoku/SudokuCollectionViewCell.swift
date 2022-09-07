@@ -11,4 +11,6 @@ import UIKit
 class SudokuCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var numberLabel: UILabel!
+    @IBOutlet weak var numberTextField: UITextField!
+    
 }
