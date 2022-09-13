@@ -12,6 +12,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        navigationController?.isNavigationBarHidden = true
         sudokuCollectionView.delegate = self
         sudokuCollectionView.dataSource = self
         
@@ -25,11 +26,23 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         colSumsColllectionView.dataSource = self
         
         resetData()
+        reloadCollectionViews()
         sudokuCollectionView.reloadData()
+        rowSumCollectionView.reloadData()
         colSumsColllectionView.reloadData()
         
+        
         configureScrollView()
-        setupPicker()
+        
+        settingRowTextField.keyboardType = UIKeyboardType.numberPad
+        settingRowTextField.keyboardAppearance = UIKeyboardAppearance.default
+        settingRowTextField.returnKeyType = UIReturnKeyType.done
+        settingRowTextField.enablesReturnKeyAutomatically = true
+        
+        settingColTextField.keyboardType = UIKeyboardType.numberPad
+        settingColTextField.keyboardAppearance = UIKeyboardAppearance.default
+        settingColTextField.returnKeyType = UIReturnKeyType.done
+        settingColTextField.enablesReturnKeyAutomatically = true
     }
     
     @IBOutlet weak var settingsStack: UIStackView!
@@ -37,7 +50,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var settingRowTextField: UITextField!
     @IBOutlet weak var settingColLabel: UILabel!
     @IBOutlet weak var settingColTextField: UITextField!
-   
+    @IBOutlet weak var settingSizeButton: UIButton!
+    
     @IBOutlet weak var sumSudokuScrollView: UIScrollView!
     
     @IBOutlet weak var sumSudokuView: UIView!
@@ -59,47 +73,26 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     var colSumsData: [Int] = []
     var randomValData: [Int] = []
     var randomIndexData: [Int] = []
+    var isSumMatch: Bool = false
+    var isZeroExists: Bool = true
 //    var randomIndexDupYn = false
     
     let randomNumRange = 1...99
     let rowsRange = 2...99
     let columnsRange = 2...99
+    let inputRange = 1...99
     
-//    @IBAction func setNumberOfRows(_ sender: Any) {
-//        appearPickerView()
-//    }
-//
-//    @IBAction func setNumberOfColumns(_ sender: Any) {
-//        appearPickerView()
-//    }
-//
-    @IBAction func setNumberOfRow(_ sender: Any) {
-        if let rowNum = Int(settingRowTextField.text ?? "3") {
+    @IBAction func setSizeOfSudoku(_ sender: Any) {
+        if let rowNum = Int(settingRowTextField.text ?? "3"), let colNum = Int(settingColTextField.text ?? "3"){
             sudokuRows = rowNum
-            print(sudokuRows)
-        }
-    }
-    
-    @IBAction func setNumberOfColumn(_ sender: Any) {
-        if let colNum = Int(settingColTextField.text ?? "3") {
+            print("Row: \(sudokuRows)")
             sudokuColums = colNum
-            print(sudokuColums)
+            print("Col: \(sudokuColums)")
+            
         }
-    }
-    
-    func setupPickerView() {
-        let pickerView = UIPickerView()
-            pickerView.delegate = self
-    
-            let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width:     UIScreen.main.bounds.width, height: 35))
-        toolBar.sizeToFit()
-            let button = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.done))
-            toolBar.setItems([button], animated: true)
-            toolBar.isUserInteractionEnabled = true
-    }
-    
-    @objc func done() {
-        view.endEditing(true)
+        
+        resetData()
+        reloadCollectionViews()
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
@@ -113,29 +106,48 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         sumSudokuScrollView.maximumZoomScale = 2.0
     }
     
-    @IBAction func tapStastButton(_ sender: Any) {
+    @IBAction func tapStartButton(_ sender: Any) {
+//        showResultAlert()
         resetData()
         placeRandomVal()
+        updateSumsData()
+        reloadCollectionViews()
+        
     }
     
     @IBAction func tapCompleteButton(_ sender: Any) {
+        compareSums(rowSums: rowSumsData, colSums: colSumsData)
+        showResultAlert()
         
     }
     
     func resetData() {
+        resetSudokuData()
+        resetSumsData()
+    }
+    
+    func resetSudokuData() {
         sudokuData = []
+        for _ in 0..<(sudokuRows*sudokuColums) {
+            sudokuData.append(0)
+        }
+    }
+    
+    func resetSumsData() {
         rowSumsData = []
         colSumsData = []
-        
         for _ in 0..<sudokuRows {
             rowSumsData.append(0)
         }
         for _ in 0..<sudokuColums {
             colSumsData.append(0)
         }
-        for _ in 0..<(sudokuRows*sudokuColums) {
-            sudokuData.append(0)
-        }
+    }
+    
+    func reloadCollectionViews() {
+        sudokuCollectionView.reloadData()
+        rowSumCollectionView.reloadData()
+        colSumsColllectionView.reloadData()
     }
     
     func createRandomVal() ->Int {
@@ -150,82 +162,104 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         return Set(arr).count == arr.count
     }
     
-    func placeRandomVal() {
-        for _ in randomNumRange {
-            randomValData.append(createRandomVal())
-            randomIndexData.append(createRandomIndex())
-            if checkDuplicate(arr: randomIndexData) {
-                for i in 0...(numberOfRandomVal - 1) {
-                    sudokuData[randomIndexData[i]] = randomValData[i]
+    func resetRandomData() {
+        randomValData = []
+        randomIndexData = []
+    }
+    
+    func updateSumsData() {
+        resetSumsData()
+        
+        for i in 0...(sudokuRows*sudokuColums - 1) {
+            for j in 0...(sudokuRows - 1) {
+                if i/sudokuColums == j {
+                    rowSumsData[j] += sudokuData[i]
                 }
             }
             
+            for k in 0...(sudokuColums - 1) {
+                if i%sudokuColums == k {
+                    colSumsData[k] += sudokuData[i]
+                }
+            }
         }
+        print("rowSums=\(rowSumsData)")
+        print("colSums=\(colSumsData)")
+        
     }
     
-    
-}
-//MARK: PickerView 관련
-extension MainViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    
-    func setupPicker() {
-         
-    }
-    
-    func appearPickerView() {
-        UIView.animate(withDuration: 0.3, animations: {self.pickerView.frame = CGRect(x: 0, y: self.view.bounds.height - self.pickerView.bounds.size.height, width: self.pickerView.bounds.size.width, height: self.pickerView.bounds.size.height)
-        })
-    }
-    
-    func disappearPickerView() {
-        UIView.animate(withDuration: 0.3, animations: {self.pickerView.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.pickerView.bounds.size.width, height: self.pickerView.bounds.size.height)
-        })
-    }
-    
-    
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 2
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch component {
-        case 0:
-            return rowsRange.count
-        case 1:
-            return columnsRange.count
-        default:
-            return 0
+    func placeRandomVal() {
+        resetRandomData()
+        for _ in 1...numberOfRandomVal {
+            randomValData.append(createRandomVal())
+            randomIndexData.append(createRandomIndex())
+            
         }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return pickerView.frame.size.width / 2
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch component {
-        case 0:
-            return "\(row + 1) Rows"
-        case 1:
-            return "\(row + 1) Colums"
-        default:
-            return ""
+        if checkDuplicate(arr: randomIndexData) {
+            for i in 0...(numberOfRandomVal - 1) {
+                sudokuData[randomIndexData[i]] = randomValData[i]
+                updateSumsData()
+            }
+        } else {
+//            placeRandomVal()
         }
+        
+        print("sudokuData = \(sudokuData)")
     }
     
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        switch component {
-        case 0:
-            sudokuRows = row + 1
-        case 1:
-            sudokuColums = row + 1
-        default:
-            break
+    func compareSums(rowSums: [Int], colSums: [Int]) -> Bool {
+        for i in 0...(rowSums.count - 2) {
+            if rowSums[i] == rowSums[i+1] {
+                isSumMatch = true
+            } else {
+                isSumMatch = false
+            }
+        }
+        
+        for i in 0...(colSums.count - 2) {
+            if colSums[i] == colSums[i+1] {
+                isSumMatch = true
+            } else {
+                isSumMatch = false
+            }
+        }
+        return isSumMatch
+    }
+    
+    func showResultAlert(){
+        if sudokuData.contains(0) {
+            let alert = UIAlertController(title: "경고", message: "아직 모든 숫자 입력 안됨\n버튼을 눌러 새게임을 시작하시겠습니까?", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: tapStartButton(_:))
+            let cancelAction = UIAlertAction(title: "아직 아님", style: .cancel, handler: nil)
+            alert.addAction(okAction)
+            alert.addAction(cancelAction)
+            present(alert, animated: false, completion: nil)
+        } else if isSumMatch == true {
+            let alert = UIAlertController(title: "성공", message: "가로세로 합 맞추기 성공", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(okAction)
+            present(alert, animated: false, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "실패", message: "가로세로 합 맞추기 실패\n리셋하시겠습니까?", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "새로", style: .destructive, handler: tapStartButton(_:))
+            let cancelAction = UIAlertAction(title: "이어서", style: .cancel, handler: nil)
+            alert.addAction(okAction)
+            alert.addAction(cancelAction)
+            present(alert, animated: false, completion: nil)
         }
     }
 }
 
+//MARK: custom delegate
+extension MainViewController: UpdatingValue {
+    func updateValue(index: Int, value: Int) {
+        sudokuData[index] = value //update sudoku data
+        updateSumsData()
+        reloadCollectionViews()
+    }
+}
+
+//MARK: Colllection Views
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -241,22 +275,34 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         
     }
-    //MARK: Colllection CellForItemAt
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView {
         case sudokuCollectionView:
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? SudokuCollectionViewCell {
-                cell.numberLabel.text = "sudoku \(indexPath.row)"
+                cell.delegate = self
+                cell.totalCellCount = sudokuColums*sudokuRows
+//                cell.numberTextField.delegate = self
+                cell.numberLabel.text = "\(sudokuData[indexPath.row])"
+                if cell.numberLabel.text != "0" {
+                    cell.numberTextField.isUserInteractionEnabled = false
+                } else { cell.numberTextField.isUserInteractionEnabled = true }
+                
+                cell.index = indexPath.row
+                cell.numberTextField.keyboardType = UIKeyboardType.numberPad
+                cell.numberTextField.keyboardAppearance = UIKeyboardAppearance.default
+                cell.numberTextField.returnKeyType = UIReturnKeyType.done
+                cell.numberTextField.enablesReturnKeyAutomatically = true // 리턴키 자동 활성화 On
                 return cell
             }
         case colSumsColllectionView:
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ColSumsCollectionViewCell {
-                cell.colSumLabel.text = "Col \(indexPath.row)"
+                cell.colSumLabel.text = "\(colSumsData[indexPath.row])"
                 return cell
             }
         case rowSumCollectionView:
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? RowSumsCollecionViewCell {
-                cell.rowSumLabel.text = "Row\(indexPath.row)"
+                cell.rowSumLabel.text = "\(rowSumsData[indexPath.row])"
                 return cell
             }
         default:
@@ -298,7 +344,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let colummns = CGFloat(self.sudokuColums)
             
             let cellWidth = width
-            let cellHeight = (height - 3*(rows - 1))/colummns - 1
+            let cellHeight = (height - 3*(rows - 1))/rows - 1
             
             return CGSize(width: cellWidth, height: cellHeight)
             
