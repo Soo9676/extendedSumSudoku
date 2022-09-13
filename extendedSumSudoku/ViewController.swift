@@ -284,6 +284,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 cell.totalCellCount = sudokuColums*sudokuRows
 //                cell.numberTextField.delegate = self
                 cell.numberLabel.text = "\(sudokuData[indexPath.row])"
+                
+//                var isGivenNumber: Bool = false
+                if randomIndexData.contains(cell.index), sudokuData.firstIndex(of: cell.numberLabel.text)
                 if cell.numberLabel.text != "0" {
                     cell.numberTextField.isUserInteractionEnabled = false
                 } else { cell.numberTextField.isUserInteractionEnabled = true }

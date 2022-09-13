@@ -19,6 +19,7 @@ class SudokuCollectionViewCell: UICollectionViewCell, UITextFieldDelegate {
     
     var totalCellCount: Int = 9
     var index: Int?
+    var isGivenNumber: Bool = false
     var delegate: UpdatingValue?
     var currentInput: Int?
     var inputRange = 1...200
