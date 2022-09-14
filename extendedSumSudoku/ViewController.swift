@@ -193,15 +193,16 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         for _ in 1...numberOfRandomVal {
             randomValData.append(createRandomVal())
             randomIndexData.append(createRandomIndex())
-            
         }
+        print("randomValData = \(randomValData)")
+        print("randomIndexData = \(randomIndexData)")
+        
         if checkDuplicate(arr: randomIndexData) {
             for i in 0...(numberOfRandomVal - 1) {
                 sudokuData[randomIndexData[i]] = randomValData[i]
-                updateSumsData()
             }
         } else {
-//            placeRandomVal()
+            placeRandomVal()
         }
         
         print("sudokuData = \(sudokuData)")
@@ -282,14 +283,19 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? SudokuCollectionViewCell {
                 cell.delegate = self
                 cell.totalCellCount = sudokuColums*sudokuRows
-//                cell.numberTextField.delegate = self
+                cell.numberTextField.isHidden = false
                 cell.numberLabel.text = "\(sudokuData[indexPath.row])"
                 
-//                var isGivenNumber: Bool = false
-                if randomIndexData.contains(cell.index), sudokuData.firstIndex(of: cell.numberLabel.text)
-                if cell.numberLabel.text != "0" {
-                    cell.numberTextField.isUserInteractionEnabled = false
-                } else { cell.numberTextField.isUserInteractionEnabled = true }
+//                var isItGivenNumber: Bool = false...
+//                게임 시작시 주어진 배치된 세개의 값인지 확인
+                if let textInCell = cell.numberLabel.text {
+                    if let numberInCell = Int(textInCell){
+                        if randomIndexData.contains(indexPath.row)/*, sudokuData[indexPath.row] == sudokuData.firstIndex(of: numberInCell)*/ {
+                            cell.numberTextField.isHidden = true
+                        }
+                    }
+                }
+                cell.numberTextField.isUserInteractionEnabled = true
                 
                 cell.index = indexPath.row
                 cell.numberTextField.keyboardType = UIKeyboardType.numberPad
