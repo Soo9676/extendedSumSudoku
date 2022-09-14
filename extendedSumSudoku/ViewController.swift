@@ -118,7 +118,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     @IBAction func tapCompleteButton(_ sender: Any) {
         compareSums(rowSums: rowSumsData, colSums: colSumsData)
         showResultAlert()
-        
     }
     
     func resetData() {
@@ -169,15 +168,21 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     func updateSumsData() {
         resetSumsData()
-        
-        for i in 0...(sudokuRows*sudokuColums - 1) {
-            for j in 0...(sudokuRows - 1) {
+        //TODO: 반복 쵀적화
+        var lastSudokuIndex = sudokuData.count - 1
+        var lastRowIndex = rowSumsData.count - 1
+        var lastColIndex = colSumsData.count - 1
+         
+        for j in 0...lastRowIndex {
+            for i in 0...lastSudokuIndex {
                 if i/sudokuColums == j {
                     rowSumsData[j] += sudokuData[i]
                 }
             }
-            
-            for k in 0...(sudokuColums - 1) {
+        }
+        
+        for k in 0...lastColIndex {
+            for i in 0...lastSudokuIndex {
                 if i%sudokuColums == k {
                     colSumsData[k] += sudokuData[i]
                 }
@@ -185,8 +190,9 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         }
         print("rowSums=\(rowSumsData)")
         print("colSums=\(colSumsData)")
-        
     }
+        
+
     
     func placeRandomVal() {
         resetRandomData()
@@ -209,6 +215,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func compareSums(rowSums: [Int], colSums: [Int]) -> Bool {
+        
         for i in 0...(rowSums.count - 2) {
             if rowSums[i] == rowSums[i+1] {
                 isSumMatch = true
@@ -228,6 +235,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func showResultAlert(){
+        compareSums(rowSums: rowSumsData, colSums: colSumsData)
+        
         if sudokuData.contains(0) {
             let alert = UIAlertController(title: "경고", message: "아직 모든 숫자 입력 안됨\n버튼을 눌러 새게임을 시작하시겠습니까?", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default, handler: tapStartButton(_:))
