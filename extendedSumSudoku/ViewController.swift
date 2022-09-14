@@ -221,6 +221,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
                 isSumMatch = true
             } else {
                 isSumMatch = false
+                return isSumMatch
             }
         }
         
@@ -229,6 +230,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
                 isSumMatch = true
             } else {
                 isSumMatch = false
+                return isSumMatch
             }
         }
         return isSumMatch
