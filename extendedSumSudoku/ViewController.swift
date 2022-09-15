@@ -168,23 +168,25 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     func updateSumsData() {
         resetSumsData()
-        //TODO: 반복 쵀적화
-        var lastSudokuIndex = sudokuData.count - 1
-        var lastRowIndex = rowSumsData.count - 1
-        var lastColIndex = colSumsData.count - 1
+        
+        let lastSudokuIndex = sudokuData.count - 1
+        let lastRowIndex = rowSumsData.count - 1
+        let lastColIndex = colSumsData.count - 1
          
-        for j in 0...lastRowIndex {
-            for i in 0...lastSudokuIndex {
-                if i/sudokuColums == j {
-                    rowSumsData[j] += sudokuData[i]
+        for r in 0...lastRowIndex {
+            for c in 0...lastColIndex {
+                let sudokuIndex = r*sudokuColums + c
+                if sudokuIndex/sudokuColums == r {
+                    rowSumsData[r] += sudokuData[r*sudokuColums + c]
                 }
             }
         }
         
-        for k in 0...lastColIndex {
-            for i in 0...lastSudokuIndex {
-                if i%sudokuColums == k {
-                    colSumsData[k] += sudokuData[i]
+        for c in 0...lastColIndex {
+            for r in 0...lastRowIndex {
+                let sudokuIndex = r*sudokuColums + c
+                if sudokuIndex%sudokuColums == c {
+                    colSumsData[c] += sudokuData[r*sudokuColums + c]
                 }
             }
         }
